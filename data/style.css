@@ -1,0 +1,23 @@
+.container {
+    background-color: #c3b7fe;
+    display: block;
+    text-align: center;
+    line-height: 50px;
+
+  }
+
+  .bordure {
+    font-size: 30px;
+  }
+  .first {
+   color:orange ;
+  }
+  .blue {
+   color:rgb(72, 137, 184) ;
+  }
+  .green {
+   color:rgb(12, 142, 101) ;
+  }
+  .violet {
+   color:blueviolet ;
+  }

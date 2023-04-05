@@ -1,0 +1,88 @@
+<!DOCTYPE html> 
+
+     <html lang='fr'> 
+
+     <head> 
+         <title>Serveur ESP32</title> 
+         <meta  content='60' name='viewport' content='width=device-width, initial-scale=1' charset='UTF-8' />
+        
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+         <link rel="stylesheet" type="text/css" href="style.css"> 
+         <script src="https://kit.fontawesome.com/7ee32702f8.js" crossorigin="anonymous"></script>
+         <script src="script.js" type="text/javascript" ></script>
+     </head> 
+
+     <body> 
+         
+        <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+            <a class="navbar-brand" class="text-success"  href="#">A.L.T</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">statistique</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        lecture
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">temperature</a>
+                        <a class="dropdown-item" href="#">humidite</a>
+                        <a class="dropdown-item" href="#">pression</a>
+                        <a class="dropdown-item" href="#">altitude</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#">autres options</a>
+                </li>
+              </ul>
+              <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="TV" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">rechercher</button>
+              </form>
+            </div>
+       </nav>
+
+       
+
+        <div class="container text-center">
+            <h1>ESP32 Weather Station </h1>
+            <div class="row">
+              <div class="col bordure">
+                <i class="bi bi-thermometer-sun first"></i> Temperature <p class="first"> <span id="humidity">0</span> <sup>°C</sup> </p> 
+              </div>
+            </div>
+              <div class="row">
+                <div class="col bordure">
+                  <i class="bi bi-moisture blue"></i> Humidity <p class="blue"><span id="humidity">0</span> <sup>%</sup> </p>  
+                </div>
+              </div>
+                <div class="row">
+                  <div class="col bordure">
+                    <i class="bi bi-stopwatch-fill green"></i> pressure <p class="green"><span id="presure">0</span>  <sup>hpa</sup> </p>  
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col bordure">
+                      <i class="bi bi-image-alt violet"></i> altitude <p> <span id="altitude">0</span> <sup>m</sup> </p>  
+                    </div>
+                  </div>
+        
+                </div>
+        
+          <br>
+         <div class="p-3 mb-2 bg-dark text-white" > 
+             <p style="text-align: center;" >il est important de noter que  ce serveur est heberge sur un ESP32</p> 
+              <p style="text-align: center;"><i > A.L.T development </i> </p>
+        </div> 
+
+    </body>
+
+    </html>
