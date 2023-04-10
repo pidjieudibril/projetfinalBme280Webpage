@@ -7,9 +7,12 @@
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Arduino_JSON.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
-#include <AsyncTCP.h>
+
+
+#include <AsyncElegantOTA.h>
 
 // Create an Event Source on /events
 
@@ -124,12 +127,14 @@ void setup()
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, "/index.html", "text/html"); });
 
+             server.serveStatic("/", SPIFFS, "/");
+/*
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, "/style.css", "text/css"); });
 
   server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, "/script.js", "text/javascript"); });
-
+*/
   //******************** réponses aux requetes du client ************
   // Affichage de la TEMPÉRATURE
   server.on("/lireTemperature", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -156,6 +161,10 @@ void setup()
       request->send(200, "application/data", json);
       json = String(); });
 
+  // Start ElegantOTA
+AsyncElegantOTA.begin(&server);
+
+  // Start server
   server.begin();
   Serial.println("Serveur actif!");
 }
@@ -165,6 +174,7 @@ void setup()
 // ======================================
 void loop()
 {
+  AsyncElegantOTA.loop();
 
   // Affichage de la TEMPÉRATURE
   Serial.print(F("Température = "));
