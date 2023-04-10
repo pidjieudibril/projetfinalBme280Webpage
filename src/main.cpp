@@ -1,35 +1,27 @@
 
+//---------inclusion des librairies -----//
+#include <Arduino.h>           //inclusion de la bibliotheque arduino
+#include <Wire.h>              // Inclus la bibliothèque Wire.h, afin de pouvoir envoyer des instructions sur le port i2c
+#include <Adafruit_Sensor.h>   //utilisation de  la bibliothèque BMP280
+#include <Adafruit_BME280.h>   //lectures du module de capteur BME280
+#include <Adafruit_BMP280.h>   //lectures du module de capteur BMp280
+#include <Arduino_JSON.h>      // gestion des chaine json
+#include <AsyncTCP.h>          //dependance de  ESPAsyncWebServer
+#include <ESPAsyncWebServer.h> //construire notre serveur Web et mettre en place un serveur HTTP asynchrone
+#include <SPIFFS.h>            //gestionnaire des systeme de fichier
+#include <AsyncElegantOTA.h>   //gestion des mise a jour distant
 
-//---------declaration pour notre libraire-----//
-#include <Arduino.h>
-#include <Wire.h> // Inclus la bibliothèque Wire.h, afin de pouvoir envoyer des instructions sur le port i2c
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-#include <Adafruit_BMP280.h>
-#include <Arduino_JSON.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
-#include <SPIFFS.h>
-
-
-#include <AsyncElegantOTA.h>
-
-// Create an Event Source on /events
-
+// creation d'objet bmp
 Adafruit_BMP280 bmp; // I2C
-
-// Variables to save values from HTML form
+// Variables pour enregistrer les valeur  de capteur
 String data;
-
-unsigned long previous_time = 0;
-unsigned long Delay = 2000;
 // Variable pour stocker les valeur de lecture
 float temp;
 float hum;
 float pres;
 float alt;
 
-// Json Variable to Hold Sensor Readings
+// Variable Json pour conserver les lectures du capteur
 JSONVar readings;
 
 // parametre wifi
@@ -38,13 +30,13 @@ const char *password = "autorisation2";
 // const char *ssid = "UNIFI_IDO1";
 // const char *password = "42Bidules!";
 //  serveur asynchrone
-
+// Créé unAsyncWebServerobjet sur le port 80 :
 AsyncWebServer server(80);
-// Instanciation de la librairie BME280
 
-//-----------------FUNCTIONS TO HANDLE SENSOR READINGS-----------------//
+//-----------------FONCTIONS POUR GÉRER LES LECTURES DES CAPTEURS-----------------//
 
 // Init BME280
+// La fonction initBME() initialise le capteur BME280 sur les broches I2C par défaut ESP32 :
 void initBMP()
 {
   if (!bmp.begin(0x76))
@@ -62,7 +54,7 @@ void initBMP()
                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 }
 
-// Get Sensor Readings
+// Les fonctions getSensorReadings() obtiennent la température, pression et l'altitude du capteur BMp280 et enregistrent les valeurs des variables temp, pres et alt.
 void getSensorReadings()
 {
 
@@ -71,7 +63,7 @@ void getSensorReadings()
   alt = bmp.readAltitude(1013.25);
 }
 
-// Return JSON String from sensor Readings
+// La fonction getJSONReadings() renvoie une chaîne JSON à partir des valeurs actuelles de température, de pression et altitude
 String getJSONReadings()
 {
   readings["temperature"] = String(temp);
@@ -81,7 +73,7 @@ String getJSONReadings()
   return jsonString;
 }
 
-// Initialize SPIFFS
+// Cette fonction initialise le système de fichiers ESP32 SPIFFS. Dans ce projet, nous sauvegardons les fichiers HTML, CSS et JavaScript pour créer les pages du serveur Web sur le système de fichiers
 void initSPIFFS()
 {
   if (!SPIFFS.begin(true))
@@ -127,14 +119,14 @@ void setup()
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, "/index.html", "text/html"); });
 
-             server.serveStatic("/", SPIFFS, "/");
-/*
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/style.css", "text/css"); });
+  server.serveStatic("/", SPIFFS, "/");
+  /*
+    server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/style.css", "text/css"); });
 
-  server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/script.js", "text/javascript"); });
-*/
+    server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/script.js", "text/javascript"); });
+  */
   //******************** réponses aux requetes du client ************
   // Affichage de la TEMPÉRATURE
   server.on("/lireTemperature", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -153,7 +145,7 @@ void setup()
     String alts = String(bmp.readAltitude(1013.25));
     request->send(200, "text/plain", alts); });
 
-  // Request for the latest sensor readings
+  // requette pour obtenir les dernier valeur de lecture
   server.on("/readings", HTTP_GET, [](AsyncWebServerRequest *request)
             {
       getSensorReadings();
@@ -162,7 +154,7 @@ void setup()
       json = String(); });
 
   // Start ElegantOTA
-AsyncElegantOTA.begin(&server);
+  AsyncElegantOTA.begin(&server);
 
   // Start server
   server.begin();
@@ -176,17 +168,17 @@ void loop()
 {
   AsyncElegantOTA.loop();
 
-  // Affichage de la TEMPÉRATURE
+  // Affichage de la TEMPÉRATURE dans le moniteur serie
   Serial.print(F("Température = "));
   Serial.print(bmp.readTemperature());
   Serial.println(F(" °C"));
 
-  // Affichage de la PRESSION ATMOSPHÉRIQUE
+  // Affichage de la PRESSION ATMOSPHÉRIQUE dans le moniteur serie
   Serial.print(F("Pression atmosphérique = "));
   Serial.print(bmp.readPressure());
   Serial.println(F(" hPa"));
 
-  // Affichage de l'estimation d'ALTITUDE
+  // Affichage de l'estimation d'ALTITUDE dans le moniter serie
   Serial.print(F("Altitude estimée = "));
   Serial.print(bmp.readAltitude(1013.25));
   Serial.println(F(" m"));
