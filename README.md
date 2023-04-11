@@ -28,6 +28,9 @@ lib_deps =
 
 ici deux branche ont été créer 
 firmweare1 
+
 ![Capture d’écran (4)](https://user-images.githubusercontent.com/73165862/231043844-5753c04c-9924-4155-8edd-2d3c70d58584.png)
+
  et firmeare2 avec mise a jour ota 
+ 
  ![Capture d’écran (10)](https://user-images.githubusercontent.com/73165862/231044000-5ce51568-3016-427c-913e-18336a8fa73f.png)
